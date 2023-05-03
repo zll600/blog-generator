@@ -1,6 +1,10 @@
+-- Html/Internal.hs
+
 module Html.Internal where
 
-import Control.Monad.State.Lazy (when)
+import Numeric.Natural
+
+-- * Types
 
 newtype Html
   = Html String
@@ -8,7 +12,10 @@ newtype Html
 newtype Structure
   = Structure String
 
-type Title = String
+type Title =
+  String
+
+-- * EDSL
 
 html_ :: Title -> Structure -> Html
 html_ title content =
@@ -23,29 +30,44 @@ html_ title content =
 p_ :: String -> Structure
 p_ = Structure . el "p" . escape
 
-h1_ :: String -> Structure
-h1_ = Structure . el "h1" . escape
+h_ :: Natural -> String -> Structure
+h_ n = Structure . el ("h" <> show n) . escape
 
-el :: String -> String -> String
-el tag content =
-  "<" <> tag <> ">" <> content <> "</" <> tag <> ">"
+ul_ :: [Structure] -> Structure
+ul_ =
+  Structure . el "ul" . concat . map (el "li" . getStructureString)
 
--- append_ :: Structure -> Structure -> Structure
--- append_ c1 c2 =
---   Structure (getStructureString c1 <> getStructureString c2)
+ol_ :: [Structure] -> Structure
+ol_ =
+  Structure . el "ol" . concat . map (el "li" . getStructureString)
+
+code_ :: String -> Structure
+code_ = Structure . el "pre" . escape
 
 instance Semigroup Structure where
-  (<>) c1 c2 = Structure (getStructureString c1 <> getStructureString c2)
+  (<>) c1 c2 =
+    Structure (getStructureString c1 <> getStructureString c2)
 
-getStructureString :: Structure -> String
-getStructureString content =
-  case content of
-    Structure str -> str
+instance Monoid Structure where
+  mempty = Structure ""
+
+-- * Render
 
 render :: Html -> String
 render html =
   case html of
     Html str -> str
+
+-- * Utilities
+
+el :: String -> String -> String
+el tag content =
+  "<" <> tag <> ">" <> content <> "</" <> tag <> ">"
+
+getStructureString :: Structure -> String
+getStructureString content =
+  case content of
+    Structure str -> str
 
 escape :: String -> String
 escape =
@@ -58,14 +80,3 @@ escape =
           '\'' -> "&#39;"
           _ -> [c]
    in concat . map escapeChar
-
-ul_ :: [Structure] -> Structure
-ul_ =
-  Structure . el "ul" . concat . map (el "li" . getStructureString)
-
-ol_ :: [Structure] -> Structure
-ol_ =
-  Structure . el "ol" . concat . map (el "li" . getStructureString)
-
-code_ :: String -> Structure
-code_ = Structure . el "pre" . escape

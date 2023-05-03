@@ -1,11 +1,15 @@
+-- Html.hs
+
 module Html
   ( Html,
     Title,
     Structure,
     html_,
+    h_,
     p_,
-    h1_,
-    -- append_,
+    ul_,
+    ol_,
+    code_,
     render,
   )
 where
