@@ -1,9 +1,9 @@
--- Convert.hs
+-- src/HsBlog/Convert.hs
 
-module Convert where
+module HsBlog.Convert where
 
-import Html qualified
-import Markup qualified
+import qualified HsBlog.Html as Html
+import qualified HsBlog.Markup as Markup
 
 convert :: Html.Title -> Markup.Document -> Html.Html
 convert title = Html.html_ title . foldMap convertStructure
