@@ -1,1 +1,1 @@
-# blog-generator
+# hs-blog
