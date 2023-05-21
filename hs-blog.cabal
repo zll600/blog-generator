@@ -34,21 +34,24 @@ library
       Paths_hs_blog
   hs-source-dirs:
       src
-  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -XImportQualifiedPost
   build-depends:
       base >=4.7 && <5
-    , directory
+      , directory
   default-language: Haskell2010
 
-executable hs-blog-exe
+executable hs-blog-gen
   main-is: Main.hs
   other-modules:
+      OptParse
       Paths_hs_blog
   hs-source-dirs:
       app
   ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
   build-depends:
       base >=4.7 && <5
+    , directory
+    , optparse-applicative
     , hs-blog
   default-language: Haskell2010
 
